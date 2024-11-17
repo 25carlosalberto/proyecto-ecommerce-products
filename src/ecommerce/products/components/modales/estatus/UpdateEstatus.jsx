@@ -24,21 +24,12 @@ const UpdateEstatusModal = ({ IdProdServOK,UpdateEstatusShowModal, setUpdateEsta
     console.log("ID producto setUpdateEstatusShowModal: ",setUpdateEstatusShowModal);
     console.log("ID producto EstatusToUpdate: ",EstatusToUpdate);
     console.log("ID producto onClose: ",onClose);
-    useEffect(() => {
-        if (EstatusToUpdate) {
-            formik.setValues({
-                IdTipoEstatusOK: EstatusToUpdate.IdTipoEstatusOK || "",
-                Actual: EstatusToUpdate.Actual || "",
-                Observacion: EstatusToUpdate.Observacion || "",
-            });
-        }
-    }, [EstatusToUpdate]);
 
     const formik = useFormik({
         initialValues: {
-            IdTipoEstatusOK: "",
-            Actual: "",
-            Observacion: "",
+            IdTipoEstatusOK: EstatusToUpdate ? EstatusToUpdate.IdTipoEstatusOK : "", // Asigna el valor inicial si existe EstatusToUpdate
+            Actual:  "",  // Si no hay valor, asigna un valor vacío
+            Observacion:  "",
         },
         validationSchema: Yup.object({
             IdTipoEstatusOK: Yup.string().required("Campo requerido"),
@@ -103,6 +94,7 @@ const UpdateEstatusModal = ({ IdProdServOK,UpdateEstatusShowModal, setUpdateEsta
                         {...commonTextFieldProps}
                         error={formik.touched.IdTipoEstatusOK && Boolean(formik.errors.IdTipoEstatusOK)}
                         helperText={formik.touched.IdTipoEstatusOK && formik.errors.IdTipoEstatusOK}
+                        disabled
                     />
                     <TextField
                         id="Actual"
