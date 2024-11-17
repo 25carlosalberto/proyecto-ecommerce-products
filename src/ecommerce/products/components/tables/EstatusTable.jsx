@@ -10,6 +10,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import RefreshIcon from "@mui/icons-material/Refresh";
 
 // DB
+import UpdateEstatusModal from "../modales/estatus/UpdateEstatus"
 import { getProduct } from "../../services/remote/get/getOneProduct";
 
 // Modals
@@ -37,15 +38,17 @@ const columns = [
         accessorKey: "Observacion",
         header: "Observacion",
         size: 150, //small column
-    }
+    },
+
 ];
 
 // Table - FrontEnd.
 const EstatusTable = ({setDatosSeleccionados, datosSeleccionados}) => {
-
+    const [UpdateEstatusShowModal, setUpdateEstatusShowModal] = useState(false);
+    const [EstatusSel, setEstatusSel] = useState(null); // Producto seleccionado
     // controlar el estado del indicador (loading).
     const [loadingTable, setLoadingTable] = useState(true);
-
+    const [ProductSelec, setProductSel] = useState(true);
     // controlar el estado de la data.
     const [productsData, setProductsData] = useState([]);
 
@@ -70,7 +73,8 @@ const EstatusTable = ({setDatosSeleccionados, datosSeleccionados}) => {
         try {
             // Obtener los id's seleccionados
             const {IdInstitutoOK, IdProdServOK,  IdProdServBK} = datosSeleccionados;
-
+            console.log("id Product: ",IdProdServOK);//PASA EL ID QUE NECESITAAAAS
+            setProductSel(IdProdServOK);
             // Verificar si fueron seleccionados los id's; de lo contrario, no hacer nada.
             if (IdInstitutoOK === "0" || IdProdServOK === "0" || IdProdServBK === "0") {
                 setLoadingTable(false);
@@ -157,16 +161,16 @@ const EstatusTable = ({setDatosSeleccionados, datosSeleccionados}) => {
                             {/* ------- BARRA DE ACCIONES ------ */}
                             <Stack direction="row" sx={{m: 1}}>
                                 <Box>
-                                    <Tooltip title="Agregar">
+                                <Tooltip title="Agregar">
                                         <IconButton
-                                            // onClick={() => setOrdenesEstatusShowModal(true)}
+                                            onClick={() => setUpdateEstatusShowModal(true)}
                                         >
                                             <AddCircleIcon/>
                                         </IconButton>
                                     </Tooltip>
                                     <Tooltip title="Editar">
                                         <IconButton
-                                            // onClick={() => setOrdenesUpdateEstatusShowModal(true)}
+                                            onClick={() => setUpdateEstatusShowModal(true)}
                                         >
                                             <EditIcon/>
                                         </IconButton>
@@ -208,21 +212,23 @@ const EstatusTable = ({setDatosSeleccionados, datosSeleccionados}) => {
                         }}
                         fetchData={fetchData}
                     />
-                </Dialog>
-                <Dialog open={OrdenesUpdateEstatusShowModal}>
-                    <OrdenesUpdateEstatusModal
-                        OrdenesUpdateEstatusShowModal={OrdenesUpdateEstatusShowModal}
-                        setOrdenesUpdateEstatusShowModal={setOrdenesUpdateEstatusShowModal}
-                        datosSeleccionados={datosSeleccionados}
-                        dataRow={dataRow}
-                        onClose={() => {
-                            setOrdenesEstatusShowModal(false)
-                        }}
-                        fetchData={fetchData}
-                    />
+                </Dialog>*/
 
-                </Dialog>
-                <Dialog open={OrdenesDetailsEstatusModalShowModal}>
+                
+                <Dialog open={UpdateEstatusShowModal}>
+                <UpdateEstatusModal
+                  IdProdServOK={ProductSelec}
+                  UpdateEstatusShowModal={UpdateEstatusShowModal}
+                  setUpdateEstatusShowModal={UpdateEstatusShowModal}
+                  EstatusToUpdate={EstatusSel} // Pasa el producto seleccionado al modal
+                  onClose={async () => {
+                    setUpdateEstatusShowModal(false);
+                  }}
+                />
+              </Dialog>
+              
+             
+                /*<Dialog open={OrdenesDetailsEstatusModalShowModal}>
                     <OrdenesDetailsEstatusModal
                         OrdenesUpdateEstatusShowModal={OrdenesDetailsEstatusModalShowModal}
                         setOrdenesUpdateEstatusShowModal={setOrdenesDetailsEstatusModalShowModal}
