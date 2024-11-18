@@ -12,6 +12,7 @@ import RefreshIcon from "@mui/icons-material/Refresh";
 // DB
 import UpdateEstatusModal from "../modales/estatus/UpdateEstatus";
 import AddEstatusModal from "../modales/estatus/AddEstatus";
+import DeleteEstatusModal from "../modales/estatus/DeleteEstatus";
 import { getProduct } from "../../services/remote/get/getOneProduct";
 
 // Modals
@@ -47,6 +48,7 @@ const columns = [
 const EstatusTable = ({setDatosSeleccionados, datosSeleccionados}) => {
     const [UpdateEstatusShowModal, setUpdateEstatusShowModal] = useState(false);
     const [AddEstatusShowModal, setAddEstatusShowModal] = useState(false);
+    const [DeleteEstatusShowModal, setDeleteEstatusShowModal] = useState(false);
     const [EstatusSel, setEstatusSel] = useState(null); // Producto seleccionado
     // controlar el estado del indicador (loading).
     const [loadingTable, setLoadingTable] = useState(true);
@@ -187,7 +189,13 @@ const EstatusTable = ({setDatosSeleccionados, datosSeleccionados}) => {
                                     </Tooltip>
                                     <Tooltip title="Eliminar">
                                         <IconButton
-                                            // onClick={() => handleDelete()}
+                                            onClick={() => {
+                                                // Si no hay producto seleccionado, no hace nada
+                                                if (!EstatusSel) {
+                                                    alert("Por favor, selecciona un producto primero.");
+                                                    return;
+                                                }
+                                                setDeleteEstatusShowModal(true)}}
                                         >
                                             <DeleteIcon/>
                                         </IconButton>
@@ -212,19 +220,7 @@ const EstatusTable = ({setDatosSeleccionados, datosSeleccionados}) => {
                     )}
                 />
                 {/* M O D A L E S */}
-                {/* <Dialog open={OrdenesEstatusShowModal}>
-                    <OrdenesEstatusModal
-                        OrdenesEstatusShowModal={OrdenesEstatusShowModal}
-                        setOrdenesEstatusShowModal={setOrdenesEstatusShowModal}
-                        datosSeleccionados={datosSeleccionados}
-                        onClose={() => {
-                            setOrdenesEstatusShowModal(false)
-                        }}
-                        fetchData={fetchData}
-                    />
-                </Dialog>*/
-
-                
+                {
                 
                 <Dialog open={UpdateEstatusShowModal}>
                 <UpdateEstatusModal
@@ -237,19 +233,7 @@ const EstatusTable = ({setDatosSeleccionados, datosSeleccionados}) => {
                   }}
                 />
               </Dialog>
-              
-             
-                /*<Dialog open={OrdenesDetailsEstatusModalShowModal}>
-                    <OrdenesDetailsEstatusModal
-                        OrdenesUpdateEstatusShowModal={OrdenesDetailsEstatusModalShowModal}
-                        setOrdenesUpdateEstatusShowModal={setOrdenesDetailsEstatusModalShowModal}
-                        dataRow={dataRow}
-                        onClose={() => {
-                            setOrdenesDetailsEstatusModalShowModal(false)
-                        }}
-                    />
-
-                </Dialog> */}
+              }
                 {
                     <Dialog open={AddEstatusShowModal}>
                     <AddEstatusModal
@@ -262,6 +246,19 @@ const EstatusTable = ({setDatosSeleccionados, datosSeleccionados}) => {
                       }}
                     />
                   </Dialog>
+                }
+                {
+                   <Dialog open={DeleteEstatusShowModal}>
+                   <DeleteEstatusModal
+                     IdProdServOK={ProductSelec}
+                     DeleteEstatusShowModal={DeleteEstatusShowModal}
+                     setDeleteEstatusShowModal={DeleteEstatusShowModal}
+                     EstatusToUpdate={EstatusSel} // Pasa el producto seleccionado al modal
+                     onClose={async () => {
+                       setDeleteEstatusShowModal(false);
+                     }}
+                   />
+                 </Dialog> 
                 }
             </Box>
         </Box>
